@@ -30,7 +30,7 @@ Namespace ViewModels
         Public ReadOnly Property TesPopupCommand As ICommand = New Command(AddressOf OnTesPopup)
 
         Private Sub OnTesPopup(obj As Object)
-            _PopupManager.ShowPopupMessage("coba", "tes")
+            _PopupManager.ShowPopupMessage("coba", "tes", Me)
         End Sub
     End Class
 End Namespace

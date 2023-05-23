@@ -6,24 +6,19 @@ Imports System.Windows
 Public Class PopupManager
     Implements IPopupManager
 
-    Private ReadOnly _ServiceProvider As IServiceProvider
     Private ReadOnly _PopupMessageViewModel As PopupMessageViewModel
 
-    Public Sub New(serviceProvider As IServiceProvider, popupMessageViewModel As PopupMessageViewModel)
-        _ServiceProvider = serviceProvider
+    Public Sub New(popupMessageViewModel As PopupMessageViewModel)
         _PopupMessageViewModel = popupMessageViewModel
     End Sub
 
 
     Public Function ShowPopupMessage(message As String,
-                                     Optional caption As String = "",
-                                     Optional owner As IHasPopupContent = Nothing,
+                                     caption As String,
+                                     owner As IHasPopupContent,
                                      Optional button As MessageBoxButton = MessageBoxButton.OK,
                                      Optional icon As MessageBoxImage = MessageBoxImage.None) As MessageBoxResult _
                                      Implements IPopupManager.ShowPopupMessage
-        If owner Is Nothing Then
-            owner = _ServiceProvider.GetServices(Of IHasPopupContent)().FirstOrDefault()
-        End If
         If owner IsNot Nothing Then
             _PopupMessageViewModel.Message = message
             _PopupMessageViewModel.Caption = caption
@@ -38,11 +33,8 @@ Public Class PopupManager
     End Function
 
     Public Function ShowPopup(Of TPopupViewModel As PopupViewModel)(popupViewModel As TPopupViewModel,
-                                                                    Optional owner As IHasPopupContent = Nothing) As TPopupViewModel _
+                                                                    owner As IHasPopupContent) As TPopupViewModel _
                                                                     Implements IPopupManager.ShowPopup
-        If owner Is Nothing Then
-            owner = _ServiceProvider.GetServices(GetType(IHasPopupContent)).FirstOrDefault()
-        End If
         If owner IsNot Nothing Then
             Return owner.ShowPopup(popupViewModel)
         End If
